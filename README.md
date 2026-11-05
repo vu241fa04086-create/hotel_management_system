@@ -1,17 +1,17 @@
 # Harborlight Hotel Management System
 
-A full-stack hotel booking and operations app built with React, Express, and MongoDB.
+A full-stack hotel booking and operations app built with React, Express, and MongoDB Atlas.
 
 ## Features
 - Room catalogue, date-based availability, and reservation requests.
 - Reservation overlap prevention and hotel staff management.
 - JWT-protected room and booking administration.
-- MongoDB persistence through Mongoose.
+- MongoDB Atlas persistence for rooms and bookings, with local JSON data imported into empty collections on first connection.
 
 ## Run locally
-Requirements: Node.js 20+ and a local MongoDB server or MongoDB Atlas database.
+Requirements: Node.js 20+ and a MongoDB Atlas database.
 
-1. Copy `server/.env.example` to `server/.env`. Set `MONGODB_URI`, `JWT_SECRET`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD`. Keep `.env` private.
+1. Copy `server/.env.example` to `server/.env`. Set `MONGODB_URI`, `MONGODB_DATABASE`, `JWT_SECRET`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD`. Keep `.env` private. In Atlas, allow your current IP and create a database user.
 2. From the project folder, install dependencies:
    ```bash
    npm install
@@ -19,8 +19,8 @@ Requirements: Node.js 20+ and a local MongoDB server or MongoDB Atlas database.
    npm --prefix client install
    ```
 3. Start the app with `npm run dev` and open `http://localhost:5173`.
-4. The API runs at `http://localhost:5000/api`; `/api/health` reports MongoDB connection status.
-5. On first connection to an empty database, the server adds the four sample rooms. To reset the sample rooms and clear all bookings, run `npm --prefix server run seed`.
+4. The API runs at `http://localhost:5000/api`; `/api/health` reports the MongoDB connection.
+5. On first connection, the server imports local rooms and bookings only if the matching Atlas collection is empty. To reset Atlas with sample rooms and clear bookings, run `npm --prefix server run seed`.
 
 ## API overview
 - `GET /api/health`
