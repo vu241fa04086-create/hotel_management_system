@@ -9,7 +9,16 @@ import bookingRoutes from './routes/bookings.js';
 import authRoutes from './routes/auth.js';
 import {initStore} from './store.js';
 const app=express();
-app.use(cors({origin:process.env.CLIENT_ORIGIN?.split(',')||true}));
+const allowedOrigins = new Set([
+  ...(process.env.CLIENT_ORIGIN || '').split(',').map(origin => origin.trim()).filter(Boolean),
+  'https://hotel-management-system-1-ve2i.onrender.com',
+]);
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin)) return callback(null, true);
+    return callback(new Error('Origin not allowed by CORS'));
+  },
+}));
 app.use(express.json({limit:'1mb'}));
 app.use('/api',rateLimit({windowMs:15*60*1000,limit:250,standardHeaders:true,legacyHeaders:false}));
 app.get('/api/health',(req,res)=>res.json({status:'ok',storage:'mongodb',database:'connected'}));
