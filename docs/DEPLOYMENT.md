@@ -11,7 +11,12 @@
 Room inventory and reservations are stored in MongoDB Atlas. On first connection, local data in `server/data/rooms.json` and `server/data/bookings.json` is imported only if the corresponding Atlas collection is empty. The seed command resets Atlas to the sample rooms and clears all bookings: `npm --prefix server run seed`.
 
 ## Deployment
-Deploy `server` as a Node service and `client` as a static Vite site. Configure `MONGODB_URI`, `MONGODB_DATABASE`, `JWT_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `CLIENT_ORIGIN` for the API. Set `VITE_API_URL` for the frontend to the public API URL ending in `/api`. Keep credentials in the host's environment settings, never in source control. Allow the API host's outbound IP address in Atlas Network Access.
+On Render, create two services:
+
+- **Frontend (Static Site):** use the repository root as the Root Directory, `npm install && npm run build` as the Build Command, and `client/dist` as the Publish Directory. Set `VITE_API_URL` to the backend's public URL ending in `/api`.
+- **Backend (Web Service):** set Root Directory to `server`, Build Command to `npm install`, and Start Command to `npm start`. Set `MONGODB_URI`, `MONGODB_DATABASE`, `JWT_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `CLIENT_ORIGIN` in Render's environment settings. `CLIENT_ORIGIN` should be the frontend's public URL.
+
+Keep credentials in the host's environment settings, never in source control. Allow the API host's outbound IP address in Atlas Network Access.
 
 ## Check after deployment
 Open `/api/health` and verify it reports `status: ok`, `storage: mongodb`, and `database: connected`. Then try room search, a booking, staff sign-in, status changes, and room create/edit/delete.
